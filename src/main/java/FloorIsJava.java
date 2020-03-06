@@ -1,4 +1,3 @@
-package com.mirado.fij;
 import robocode.*;
 //import java.awt.Color;
 
