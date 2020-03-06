@@ -9,6 +9,7 @@ import java.awt.Color;
 public class FloorIsJava extends Robot
 {
 	private boolean scanning = false;
+	private String currentTarget = "";
 	/**
 	 * run: FloorIsJava's default behavior
 	 */
@@ -29,11 +30,24 @@ public class FloorIsJava extends Robot
 			scanning = false;
 		}
 	}
+	
+	public void onRobotDeath(RobotDeathEvent event) {
+		if (event.getName() == currentTarget) {
+			currentTarget = "";
+		}
+	}
 
 	/**
 	 * onScannedRobot: What to do when you see another robot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
+		if (currentTarget == "") {
+			currentTarget = e.getName();
+		} else {
+			if (e.getRobotName() != currentTarget) {
+				return;
+			}
+		}
 		// Replace the next line with any behavior you would like
 		stop();
 		
