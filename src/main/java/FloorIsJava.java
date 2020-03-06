@@ -8,6 +8,7 @@ import java.awt.Color;
  */
 public class FloorIsJava extends Robot
 {
+	private boolean scanning = false;
 	/**
 	 * run: FloorIsJava's default behavior
 	 */
@@ -22,7 +23,7 @@ public class FloorIsJava extends Robot
 
 		// Robot main loop
 		while(true) {
-			double turnDelta = Math.random() * 30;
+		  	double turnDelta = Math.random() * 30;
 			if (Math.random() > 0.5) {
 				turnRight(turnDelta);
 			} else {
@@ -30,9 +31,7 @@ public class FloorIsJava extends Robot
 			}
 		    double moveDelta = Math.random() * 150;
 		    ahead(moveDelta);
-			if (Math.random() < 0.1) {
-				turnGunRight(360);
-			}
+			turnRadarRight(360);
 		}
 	}
 
@@ -41,9 +40,16 @@ public class FloorIsJava extends Robot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
-		if (e.getDistance() < 500) {
-			fire(10);
+		stop();
+		double delta = e.getBearing()+180 + getHeading() - getGunHeading();
+		if (Math.abs(delta % 360) > 0.1) {
+		    if (delta > 180) {
+			    turnGunLeft(delta - 180);
+		    } else {
+			    turnGunRight(delta);
+		    }			
 		}
+		fire(1);
 	}
 
 	/**
