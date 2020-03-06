@@ -19,19 +19,14 @@ public class FloorIsJava extends Robot
 		// and the next line:
 
 		setColors(Color.green, Color.green, Color.green, Color.green, Color.green);
-		setAdjustGunForRobotTurn(true);
+		setAdjustGunForRobotTurn(false);
 
 		// Robot main loop
 		while(true) {
-		  	double turnDelta = Math.random() * 30;
-			if (Math.random() > 0.5) {
-				turnRight(turnDelta);
-			} else {
-				turnLeft(turnDelta);
-			}
-		    double moveDelta = Math.random() * 150;
-		    ahead(moveDelta);
+		  	//ahead(500);
+			scanning = true;
 			turnRadarRight(360);
+			scanning = false;
 		}
 	}
 
@@ -41,15 +36,19 @@ public class FloorIsJava extends Robot
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
 		stop();
-		double delta = e.getBearing()+180 + getHeading() - getGunHeading();
-		if (Math.abs(delta % 360) > 0.1) {
-		    if (delta > 180) {
-			    turnGunLeft(delta - 180);
-		    } else {
-			    turnGunRight(delta);
-		    }			
+		
+		double bearing = e.getBearing();
+		if (bearing < 0) {
+			turnLeft(Math.abs(bearing));
+		} else {
+			turnRight(bearing);
 		}
-		fire(1);
+		
+		if (e.getDistance() > 250) {
+			ahead(250);
+		} else {
+			fire(5);
+		}
 	}
 
 	/**
